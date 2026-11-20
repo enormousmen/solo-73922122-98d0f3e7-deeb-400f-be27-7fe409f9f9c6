@@ -22,7 +22,7 @@ STATUS_MEANINGS = {
 }
 
 
-def _resolution_json(res: Resolution) -> dict[str, Any]:
+def resolution_json(res: Resolution) -> dict[str, Any]:
     return {
         "domain": res.domain,
         "resolved": res.ok,
@@ -39,6 +39,7 @@ def _resolution_json(res: Resolution) -> dict[str, Any]:
                 "outcome": t.outcome,
                 "target": t.target,
                 "addresses": t.addresses,
+                "wildcard": t.wildcard,
             }
             for t in res.trace
         ],
@@ -96,7 +97,7 @@ def _blocked_candidate_json(block: CandidateBlock) -> dict[str, Any]:
         "categories": [
             {"category": c, "label": CATEGORY_LABELS[c]} for c in block.categories
         ],
-        "failures": [_resolution_json(f) for f in block.failures],
+        "failures": [resolution_json(f) for f in block.failures],
     }
 
 
@@ -131,7 +132,7 @@ def build_plan(request: PlanRequest) -> dict[str, Any]:
             "order": [],
             "safe_prefix": [],
             "steps": [],
-            "fault_chains": [_resolution_json(f) for f in initial_failures],
+            "fault_chains": [resolution_json(f) for f in initial_failures],
             "blocked_zones": [],
             "failure_summary": _failure_summary(initial_failures),
         }

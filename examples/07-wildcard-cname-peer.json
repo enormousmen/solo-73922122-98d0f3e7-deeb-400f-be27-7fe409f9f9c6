@@ -1,0 +1,20 @@
+{
+  "zone": {
+    "name": "example.com",
+    "records": [
+      {"name": "*.example.com", "type": "CNAME", "value": "lb.svc.example.net"}
+    ],
+    "new_records": [
+      {"name": "*.example.com", "type": "CNAME", "value": "lb2.svc.example.net"}
+    ]
+  },
+  "peer_zones": [
+    {
+      "name": "svc.example.net",
+      "records": [
+        {"name": "lb.svc.example.net", "type": "A", "value": "10.40.0.10"},
+        {"name": "lb2.svc.example.net", "type": "A", "value": "10.40.0.20"}
+      ]
+    }
+  ]
+}

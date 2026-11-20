@@ -1,0 +1,15 @@
+{
+  "zone": {
+    "name": "example.com",
+    "records": [
+      {"name": "*.example.com", "type": "A", "value": "10.30.0.10"},
+      {"name": "api.example.com", "type": "A", "value": "10.30.0.20"}
+    ],
+    "new_records": [
+      {"name": "*.example.com", "type": "A", "value": "10.30.0.10"},
+      {"name": "api.example.com", "type": "A", "value": "10.30.0.20"},
+      {"name": "www.example.com", "type": "A", "value": "10.30.0.10"},
+      {"name": "*.www.example.com", "type": "A", "value": "10.30.0.10"}
+    ]
+  }
+}

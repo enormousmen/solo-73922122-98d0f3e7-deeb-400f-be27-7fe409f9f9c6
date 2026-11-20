@@ -15,6 +15,8 @@ class TraceStep(BaseModel):
     ]
     target: str | None = None
     addresses: list[str] = Field(default_factory=list)
+    # Set when this hop was synthesised from a wildcard record.
+    wildcard: str | None = None
 
 
 class ChainFailure(BaseModel):
@@ -75,3 +77,53 @@ class PlanResponse(BaseModel):
 class HealthResponse(BaseModel):
     status: str
     version: str
+
+
+# --------------------------------------------------------------------------- #
+# Wildcard-change check
+# --------------------------------------------------------------------------- #
+
+
+class ResolutionReport(BaseModel):
+    """One side's full resolution of the counterexample name."""
+
+    domain: str
+    resolved: bool
+    addresses: list[str]
+    category: Literal[
+        "missing_record", "cname_loop", "external_target", "chain_too_long"
+    ] | None
+    category_label: str | None
+    detail: str | None = None
+    message: str
+    chain: str
+    trace: list[TraceStep]
+
+
+class Counterexample(BaseModel):
+    name: str
+    name_kind: Literal["existing_name", "synthetic_probe"]
+    name_note: str | None = None
+    change: Literal[
+        "addresses_changed",
+        "resolution_lost",
+        "resolution_gained",
+        "failure_type_changed",
+    ]
+    change_label: str
+    before: ResolutionReport
+    after: ResolutionReport
+
+
+class WildcardCheckResponse(BaseModel):
+    mode: Literal["authoritative_no_cache"]
+    zone: str
+    status: Literal["equivalent", "different"]
+    status_meaning: str
+    message: str
+    candidates_checked: int
+    differences_found: int
+    counterexample: Counterexample | None = None
+    assumptions: list[str]
+
+    model_config = {"extra": "allow"}
